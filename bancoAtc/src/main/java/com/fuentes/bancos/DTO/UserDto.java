@@ -8,68 +8,62 @@ import com.fuentes.bancos.VO.Bill;
 
 public class UserDto {
 	
-	private int usuario_id;
-	private String usuario_nombre;
-	private String usuario_identificacion;
-	private String usuario_correo;
-	private String usuario_estado;
+	private int user_id;
+	private String user_name;
+	private String user_identification;
+	private String user_email;
+	private String user_estate;
 	
 	@JsonManagedReference
-    private BillDto cuenta;
-	
-	@OneToMany(mappedBy = "usuario_id", cascade = CascadeType.ALL)
-	
-	
-	public int getUsuario_id() {
-		return usuario_id;
+    private BillDto bilDto;
+
+	@OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+	public int getUser_id() {
+		return user_id;
 	}
-	
-	public void setUsuario_id(int usuario_id) {
-		this.usuario_id = usuario_id;
+
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
 	}
-	
-	public String getUsuario_nombre() {
-		return usuario_nombre;
+
+	public String getUser_name() {
+		return user_name;
 	}
-	
-	public void setUsuario_nombre(String usuario_nombre) {
-		this.usuario_nombre = usuario_nombre;
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
 	}
-	
-	public String getUsuario_identificacion() {
-		return usuario_identificacion;
+
+	public String getUser_identification() {
+		return user_identification;
 	}
-	
-	public void setUsuario_identificacion(String usuario_identificacion) {
-		this.usuario_identificacion = usuario_identificacion;
+
+	public void setUser_identification(String user_identification) {
+		this.user_identification = user_identification;
 	}
-	
-	public String getUsuario_correo() {
-		return usuario_correo;
+
+	public String getUser_email() {
+		return user_email;
 	}
-	
-	public void setUsuario_correo(String usuario_correo) {
-		this.usuario_correo = usuario_correo;
+
+	public void setUser_email(String user_email) {
+		this.user_email = user_email;
 	}
-	
-	public String getUsuario_estado() {
-		return usuario_estado;
+
+	public String getUser_estate() {
+		return user_estate;
 	}
-	
-	public void setUsuario_estado(String usuario_estado) {
-		this.usuario_estado = usuario_estado;
+
+	public void setUser_estate(String user_estate) {
+		this.user_estate = user_estate;
 	}
-	
-	public BillDto getCuenta() {
-		return cuenta;
+
+	public BillDto getBilDto() {
+		return bilDto;
 	}
-	
-	public void setCuenta(BillDto cuenta) {
-		this.cuenta = cuenta;
+
+	public void setBilDto(BillDto bilDto) {
+		this.bilDto = bilDto;
 	}
-	
-	
-	
-	
 
 }

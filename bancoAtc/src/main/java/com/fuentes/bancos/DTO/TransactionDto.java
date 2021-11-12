@@ -2,14 +2,14 @@ package com.fuentes.bancos.DTO;
 
 public class TransactionDto extends BillTransDto{
 	
-	private String numeroCuentaDestino;
+	private String numberBillDestiny;
 
-	public String getNumeroCuentaDestino() {
-		return numeroCuentaDestino;
+	public String getNumberBillDestiny() {
+		return numberBillDestiny;
 	}
 
-	public void setNumeroCuentaDestino(String numeroCuentaDestino) {
-		this.numeroCuentaDestino = numeroCuentaDestino;
+	public void setNumberBillDestiny(String numberBillDestiny) {
+		this.numberBillDestiny = numberBillDestiny;
 	}
 	
 }

@@ -16,63 +16,63 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Table(name="cuenta")
+@Table(name="bill")
 public class Bill {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int cuenta_id;
+	private int bill_id;
 	
 	@OneToOne()
-  	@JoinColumn(name="usuario_id")
+  	@JoinColumn(name="user_id")
   	@JsonBackReference
-  	private User usuario_id;
+  	private User user_id;
 	
-	private Long cuenta_numero;
-	private int cuenta_saldo;
+	private Long bill_number;
+	private int bill_amount;
 	
-	@OneToMany(mappedBy = "cuenta_id", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "bill_id", cascade = CascadeType.ALL)
 	@JsonManagedReference
-    private List<Transaction> transaccion;
-	
-	public int getCuenta_id() {
-		return cuenta_id;
+    private List<Transaction> transaction;
+
+	public int getBill_id() {
+		return bill_id;
 	}
-	
-	public void setCuenta_id(int cuenta_id) {
-		this.cuenta_id = cuenta_id;
+
+	public void setBill_id(int bill_id) {
+		this.bill_id = bill_id;
 	}
-	
-	public User getUsuario_id() {
-		return usuario_id;
+
+	public User getUser_id() {
+		return user_id;
 	}
-	
-	public void setUsuario_id(User usuario_id) {
-		this.usuario_id = usuario_id;
+
+	public void setUser_id(User user_id) {
+		this.user_id = user_id;
 	}
-	
-	public Long getCuenta_numero() {
-		return cuenta_numero;
+
+	public Long getBill_number() {
+		return bill_number;
 	}
-	
-	public void setCuenta_numero(Long cuenta_numero) {
-		this.cuenta_numero = cuenta_numero;
+
+	public void setBill_number(Long bill_number) {
+		this.bill_number = bill_number;
 	}
-	
-	public int getCuenta_saldo() {
-		return cuenta_saldo;
+
+	public int getBill_amount() {
+		return bill_amount;
 	}
-	
-	public void setCuenta_saldo(int cuenta_saldo) {
-		this.cuenta_saldo = cuenta_saldo;
+
+	public void setBill_amount(int bill_amount) {
+		this.bill_amount = bill_amount;
 	}
-	
-	public List<Transaction> getTransaccion() {
-		return transaccion;
+
+	public List<Transaction> getTransaction() {
+		return transaction;
 	}
-	
-	public void setTransaccion(List<Transaction> transaccion) {
-		this.transaccion = transaccion;
+
+	public void setTransaction(List<Transaction> transaction) {
+		this.transaction = transaction;
 	}
 	
 }

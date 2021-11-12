@@ -25,25 +25,28 @@ import com.fuentes.bancos.repository.TransactionRepository;
 public class TransactionController {
 	
 	@Autowired
-	BillRepository rCuentaRepositorio;
+	BillRepository billRepository;
 	@Autowired
-	TransactionRepository rTransaccionRepositorio;
+	TransactionRepository transactionRepository;
 	
 	@PutMapping(path = "/retirement")
 	public Map<String, Object> retiro(@RequestBody BillTransDto transaccionDto) {
 		Bill cuenta = null;
 		Transaction transaccion = new Transaction();
-		int monto = Integer.parseInt(transaccionDto.getMonto());
-		cuenta = rCuentaRepositorio.findNumeroCuenta(transaccionDto.getNumeroCuenta());
+		int monto = Integer.parseInt(transaccionDto.getAmount());
+		cuenta = billRepository.findNumeroCuenta(transaccionDto.getNumberBill());
 		if (cuenta != null) {
 			try {
-				transaccion.setCuenta_id(cuenta);
-				transaccion.setTrasaccion_tipo(transaccionDto.getTipoTransaccion());
-				transaccion.setTrasaccion_monto(transaccionDto.getMonto());
-				if (cuenta.getCuenta_saldo() >= monto) {
-					cuenta.setCuenta_saldo(cuenta.getCuenta_saldo() - monto);
-					rCuentaRepositorio.save(cuenta);
-					rTransaccionRepositorio.save(transaccion);
+				transaccion.setBill_id(cuenta);
+				transaccion.setTransaction_type(transaccionDto.getTypeTransation());
+				transaccion.setTransaction_amount(transaccionDto.getAmount());
+				transaccion.setTransaction_description("RETIRO DE PC");
+				transaccion.setTransaction_date("31 Oct 21 10:00");
+				transaccion.setTransaction_estate(false);
+				if (cuenta.getBill_amount() >= monto) {
+					cuenta.setBill_amount(cuenta.getBill_amount() - monto);
+					billRepository.save(cuenta);
+					transactionRepository.save(transaccion);
 				} else {
 					return Utils.msg(false, "Saldo insuficiente.");
 				}
@@ -56,34 +59,38 @@ public class TransactionController {
 		}
 	}
 	
-	
 	@PutMapping(path = "/transfer")
 	public Map<String, Object> transferencia(@RequestBody TransactionDto transferenciaDto) {
 		Bill cuenta = null;
 		Bill cuentaDestino = null;
 		Transaction transaccion = new Transaction();
-		int monto = Integer.parseInt(transferenciaDto.getMonto());
-		cuenta = rCuentaRepositorio.findNumeroCuenta(transferenciaDto.getNumeroCuenta());
-		cuentaDestino = rCuentaRepositorio.findNumeroCuenta(transferenciaDto.getNumeroCuentaDestino());
+		int monto = Integer.parseInt(transferenciaDto.getAmount());
+		cuenta = billRepository.findNumeroCuenta(transferenciaDto.getNumberBill());
+		cuentaDestino = billRepository.findNumeroCuenta(transferenciaDto.getNumberBillDestiny());
 		if (cuentaDestino != null) {
 			try {
-				transaccion.setCuenta_id(cuenta);
+				transaccion.setBill_id(cuenta);
 				
-				if (cuenta.getCuenta_saldo() >= monto) {
-					cuenta.setCuenta_saldo(cuenta.getCuenta_saldo() - monto);
-					transaccion.setTrasaccion_monto(transferenciaDto.getMonto());
-					transaccion.setTrasaccion_tipo(transferenciaDto.getTipoTransaccion());
-					rTransaccionRepositorio.save(transaccion);
-					rCuentaRepositorio.save(cuenta);
+				if (cuenta.getBill_amount() >= monto) {
+					cuenta.setBill_amount(cuenta.getBill_amount() - monto);
+					transaccion.setTransaction_amount(transferenciaDto.getAmount());
+					transaccion.setTransaction_type(transferenciaDto.getTypeTransation());
+					transaccion.setTransaction_description("PAGO DE PC");
+					transaccion.setTransaction_date("31 Oct 21 10:00");
+					transaccion.setTransaction_estate(false);
+					transactionRepository.save(transaccion);
+					billRepository.save(cuenta);
 					
 					transaccion = new Transaction();
-					
-					transaccion.setCuenta_id(cuentaDestino);
-					cuentaDestino.setCuenta_saldo(cuentaDestino.getCuenta_saldo() + monto);
-					transaccion.setTrasaccion_monto(transferenciaDto.getMonto());
-					transaccion.setTrasaccion_tipo(transferenciaDto.getTipoTransaccion());
-					rCuentaRepositorio.save(cuentaDestino);
-					rTransaccionRepositorio.save(transaccion);
+					transaccion.setTransaction_estate(true);
+					transaccion.setBill_id(cuentaDestino);
+					cuentaDestino.setBill_amount(cuentaDestino.getBill_amount() + monto);
+					transaccion.setTransaction_amount(transferenciaDto.getAmount());
+					transaccion.setTransaction_type(transferenciaDto.getTypeTransation());
+					transaccion.setTransaction_description("PAGO DE PC");
+					transaccion.setTransaction_date("31 Oct 21 10:00");
+					billRepository.save(cuentaDestino);
+					transactionRepository.save(transaccion);
 				} else {
 					return Utils.msg(false, "Saldo insuficiente.");
 				}
@@ -96,38 +103,15 @@ public class TransactionController {
 		}
 	}
 	
-	@PutMapping(path = "/deposit")
-	public Map<String, Object> deposito(@RequestBody BillTransDto transaccionDto) {
-		Bill cuenta = null;
-		Transaction transaccion = new Transaction();
-		int monto = Integer.parseInt(transaccionDto.getMonto());
-		cuenta = rCuentaRepositorio.findNumeroCuenta(transaccionDto.getNumeroCuenta());
-		if (cuenta != null) {
-			try {
-				transaccion.setCuenta_id(cuenta);
-					cuenta.setCuenta_saldo(cuenta.getCuenta_saldo() + monto);
-					transaccion.setTrasaccion_monto(transaccionDto.getMonto());
-					transaccion.setTrasaccion_tipo(transaccionDto.getTipoTransaccion());
-					rCuentaRepositorio.save(cuenta);
-					rTransaccionRepositorio.save(transaccion);
-				return Utils.msg(true, "Deposito exitoso.");
-			} catch (Exception e) {
-				return Utils.msg(false, "Error al depositar el dinero.");
-			}
-		} else {
-			return Utils.msg(false, "No existe una cuenta asociada a ese número.");
-		}
-	}
-	
 	@PostMapping("/getTransfers")
 	public Map<String, Object> mostrarTransferencias(@RequestBody BillTransDto cuenta) {
 		try {
 			
-			Bill bill = rCuentaRepositorio.findNumeroCuenta(cuenta.getNumeroCuenta());
+			Bill bill = billRepository.findNumeroCuenta(cuenta.getNumberBill());
 			
 			if(bill != null) {
-				if(bill.getTransaccion() != null && bill.getTransaccion().size()>0) {
-					return Utils.mapear(true, "success", bill.getTransaccion());
+				if(bill.getTransaction() != null && bill.getTransaction().size()>0) {
+					return Utils.mapear(true, "success", bill.getTransaction());
 				}else {
 					return Utils.msg(true, "No existen transacciones.");
 				}

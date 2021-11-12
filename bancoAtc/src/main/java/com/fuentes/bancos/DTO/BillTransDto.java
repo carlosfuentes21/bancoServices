@@ -2,27 +2,27 @@ package com.fuentes.bancos.DTO;
 
 public class BillTransDto {
 	
-	private String numeroCuenta;
-	private String tipoTransaccion;
-	private String monto;
+	private String numberBill;
+	private String typeTransation;
+	private String amount;
 	
-	public String getNumeroCuenta() {
-		return numeroCuenta;
+	public String getNumberBill() {
+		return numberBill;
 	}
-	public void setNumeroCuenta(String numeroCuenta) {
-		this.numeroCuenta = numeroCuenta;
+	public void setNumberBill(String numberBill) {
+		this.numberBill = numberBill;
 	}
-	public String getTipoTransaccion() {
-		return tipoTransaccion;
+	public String getTypeTransation() {
+		return typeTransation;
 	}
-	public void setTipoTransaccion(String tipoTransaccion) {
-		this.tipoTransaccion = tipoTransaccion;
+	public void setTypeTransation(String typeTransation) {
+		this.typeTransation = typeTransation;
 	}
-	public String getMonto() {
-		return monto;
+	public String getAmount() {
+		return amount;
 	}
-	public void setMonto(String monto) {
-		this.monto = monto;
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 	
 }

@@ -18,28 +18,27 @@ import com.fuentes.bancos.repository.UserRepository;
 
 
 @RestController
-@RequestMapping(path = "/usuario")
+@RequestMapping(path = "/user")
 public class UserController {
 	
 	@Autowired
-	private UserRepository rUsuarioRepository;
+	private UserRepository userRepository;
 	@Autowired
-	private BillRepository rBillRepository;
-	
+	private BillRepository billRepository;
 	
 	@PostMapping("/register")
 	public Map<String, Object> create(@RequestBody User user) {
 		
 		try {
-			if (Utils.validarCorreo(user.getUsuario_correo())) {
-				if (Utils.validarContra(user.getUsuario_contra())) {
+			if (Utils.validarCorreo(user.getUser_email())) {
+				if (Utils.validarContra(user.getUser_password())) {
 					
-					rUsuarioRepository.save(user);
+					userRepository.save(user);
 					Bill cuenta = new Bill();
-					cuenta.setUsuario_id(user);
-					cuenta.setCuenta_numero(Long.valueOf(Utils.numeroCuenta()));
-					cuenta.setCuenta_saldo(1000000);
-					rBillRepository.save(cuenta);
+					cuenta.setUser_id(user);
+					cuenta.setBill_number(Long.valueOf(Utils.numeroCuenta()));
+					cuenta.setBill_amount(1000000);
+					billRepository.save(cuenta);
 					
 				} else {
 					return Utils.msg(false, "La contraseña no es valida.");
@@ -54,7 +53,6 @@ public class UserController {
 		
 	}
 	
-	
 	@PostMapping("/login")
 	public Map<String, Object> login(@RequestBody User user) {
 		
@@ -64,22 +62,22 @@ public class UserController {
 		Bill bill = new Bill();
 		try {
 			
-			loginUsuario = rUsuarioRepository.login(user.getUsuario_correo(), user.getUsuario_contra());
-			bill =  rBillRepository.findByUsuarioId(loginUsuario.getUsuario_id());
+			loginUsuario = userRepository.login(user.getUser_email(), user.getUser_password());
+			bill =  billRepository.findByUsuarioId(loginUsuario.getUser_id());
 			
-			if (loginUsuario.getUsuario_estado() == "HABILITADO") {
+			if (loginUsuario.getUser_estate() == "HABILITADO") {
 				return Utils.mapear(false, "El usuario no esta habilitado", null);
 			}
 			
-			usuarioActivo.setUsuario_id(loginUsuario.getUsuario_id());
-			usuarioActivo.setUsuario_correo(loginUsuario.getUsuario_correo());
-			usuarioActivo.setUsuario_nombre(loginUsuario.getUsuario_nombre());
-			usuarioActivo.setUsuario_identificacion(loginUsuario.getUsuario_identificacion());
-			usuarioActivo.setUsuario_estado(loginUsuario.getUsuario_estado());
+			usuarioActivo.setUser_id(loginUsuario.getUser_id());
+			usuarioActivo.setUser_email(loginUsuario.getUser_email());
+			usuarioActivo.setUser_name(loginUsuario.getUser_name());
+			usuarioActivo.setUser_identification(loginUsuario.getUser_identification());
+			usuarioActivo.setUser_estate(loginUsuario.getUser_estate());
 			
-			billDto.setCuenta_numero(bill.getCuenta_numero());
-			billDto.setCuenta_saldo(bill.getCuenta_saldo());
-			usuarioActivo.setCuenta(billDto);
+			billDto.setBill_number(bill.getBill_number());
+			billDto.setBill_amount(bill.getBill_amount());
+			usuarioActivo.setBilDto(billDto);
 			
 			return Utils.mapear(true, "Ingreso exitoso!", usuarioActivo);
 		} catch (Exception e) {
@@ -87,5 +85,6 @@ public class UserController {
 			return Utils.msg(false, "Error al ingresar.");
 		}
 	}
+	
 
 }

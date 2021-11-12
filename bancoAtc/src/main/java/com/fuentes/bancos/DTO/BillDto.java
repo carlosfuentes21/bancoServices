@@ -4,23 +4,19 @@ import javax.persistence.OneToMany;
 
 public class BillDto {
 	
-	private Long cuenta_numero;
-	private int cuenta_saldo;
-	
-	public Long getCuenta_numero() {
-		return cuenta_numero;
+	private Long bill_number;
+	private int bill_amount;
+	public Long getBill_number() {
+		return bill_number;
 	}
-	
-	public void setCuenta_numero(Long cuenta_numero) {
-		this.cuenta_numero = cuenta_numero;
+	public void setBill_number(Long bill_number) {
+		this.bill_number = bill_number;
 	}
-	
-	public int getCuenta_saldo() {
-		return cuenta_saldo;
+	public int getBill_amount() {
+		return bill_amount;
 	}
-	
-	public void setCuenta_saldo(int cuenta_saldo) {
-		this.cuenta_saldo = cuenta_saldo;
+	public void setBill_amount(int bill_amount) {
+		this.bill_amount = bill_amount;
 	}
 	
 }
