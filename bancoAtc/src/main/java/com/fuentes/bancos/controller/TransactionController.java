@@ -13,10 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fuentes.bancos.Utils;
 import com.fuentes.bancos.DTO.BillTransDto;
+import com.fuentes.bancos.DTO.CodeDto;
+import com.fuentes.bancos.DTO.NumberBillDto;
+import com.fuentes.bancos.DTO.RetirementDto;
 import com.fuentes.bancos.DTO.TransactionDto;
 import com.fuentes.bancos.VO.Bill;
+import com.fuentes.bancos.VO.CodeTransaction;
 import com.fuentes.bancos.VO.Transaction;
 import com.fuentes.bancos.repository.BillRepository;
+import com.fuentes.bancos.repository.CodeRepository;
 import com.fuentes.bancos.repository.TransactionRepository;
 
 
@@ -28,35 +33,68 @@ public class TransactionController {
 	BillRepository billRepository;
 	@Autowired
 	TransactionRepository transactionRepository;
+	@Autowired
+	CodeRepository codeRepository;
+	
+	@PostMapping(path = "/codeRetirement")
+	public Map<String, Object> codeRetirement(@RequestBody NumberBillDto transaccionDto) {
+		try {
+		
+			CodeTransaction codeTransaction = new CodeTransaction();
+			codeTransaction.setNumber_bill(transaccionDto.getNumberBill());
+			codeTransaction.setCode(Utils.codeAut());
+			codeTransaction.setCode_time(Utils.getDate()+1800000);
+			
+			codeRepository.save(codeTransaction);
+			
+			CodeDto codeDto = new CodeDto();
+			codeDto.setCode(codeTransaction.getCode());
+			codeDto.setNumberBill(codeTransaction.getNumber_bill());
+			return Utils.mapear(true, "success", codeDto);
+		}catch(Exception e) {
+			return Utils.msg(false, "Error al generar codigo de autorizacion.");
+		}
+	}
 	
 	@PutMapping(path = "/retirement")
-	public Map<String, Object> retiro(@RequestBody BillTransDto transaccionDto) {
-		Bill cuenta = null;
-		Transaction transaccion = new Transaction();
-		int monto = Integer.parseInt(transaccionDto.getAmount());
-		cuenta = billRepository.findNumeroCuenta(transaccionDto.getNumberBill());
-		if (cuenta != null) {
-			try {
-				transaccion.setBill_id(cuenta);
-				transaccion.setTransaction_type(transaccionDto.getTypeTransation());
-				transaccion.setTransaction_amount(transaccionDto.getAmount());
-				transaccion.setTransaction_description("RETIRO DE PC");
-				transaccion.setTransaction_date("31 Oct 21 10:00");
-				transaccion.setTransaction_estate(false);
-				if (cuenta.getBill_amount() >= monto) {
-					cuenta.setBill_amount(cuenta.getBill_amount() - monto);
-					billRepository.save(cuenta);
-					transactionRepository.save(transaccion);
+	public Map<String, Object> retiro(@RequestBody RetirementDto retirementDto) {
+		
+		CodeTransaction codeTransaction = codeRepository.findNumeroCuenta(retirementDto.getNumberBill(), retirementDto.getCodeAut());
+		if(codeTransaction != null && codeTransaction.getCode().equals(retirementDto.getCodeAut()) && codeTransaction.getNumber_bill().equals(retirementDto.getNumberBill())) {
+			if(Utils.getDate() < codeTransaction.getCode_time()) {
+				Bill cuenta = null;
+				Transaction transaccion = new Transaction();
+				int monto = Integer.parseInt(retirementDto.getAmount());
+				cuenta = billRepository.findNumeroCuenta(retirementDto.getNumberBill());
+				if (cuenta != null) {
+					try {
+						transaccion.setBill_id(cuenta);
+						transaccion.setTransaction_type(retirementDto.getTypeTransation());
+						transaccion.setTransaction_amount(retirementDto.getAmount());
+						transaccion.setTransaction_description("RETIRO DE PC");
+						transaccion.setTransaction_date("31 Oct 21 10:00");
+						transaccion.setTransaction_estate(false);
+						if (cuenta.getBill_amount() >= monto) {
+							cuenta.setBill_amount(cuenta.getBill_amount() - monto);
+							billRepository.save(cuenta);
+							transactionRepository.save(transaccion);
+						} else {
+							return Utils.msg(false, "Saldo insuficiente.");
+						}
+						return Utils.msg(true, "Retiro exitoso.");
+					} catch (Exception e) {
+						return Utils.msg(false, "Error al retirar el dinero.");
+					}
 				} else {
-					return Utils.msg(false, "Saldo insuficiente.");
+					return Utils.msg(false, "No existe una cuenta asociada a ese n�mero.");
 				}
-				return Utils.msg(true, "Retiro exitoso.");
-			} catch (Exception e) {
-				return Utils.msg(false, "Error al retirar el dinero.");
+			}else {
+				return Utils.msg(false, "El codigo a caducado.");
 			}
-		} else {
-			return Utils.msg(false, "No existe una cuenta asociada a ese n�mero.");
 		}
+		
+		return Utils.msg(false, "Transaccion fallida.");
+		
 	}
 	
 	@PutMapping(path = "/transfer")

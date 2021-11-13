@@ -1,5 +1,8 @@
 package com.fuentes.bancos;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -10,8 +13,8 @@ public class Utils {
 	public static Map<String, Object> mapear(boolean status, String msg, Object data) {
 		Map<String, Object> respuesta = new HashMap<>();
 		respuesta.put("msg", msg);
-		respuesta.put("data", data);
 		respuesta.put("status", status);
+		respuesta.put("data", data);
 		return respuesta;
 	}
 	
@@ -71,6 +74,18 @@ public class Utils {
 			numero += (int) (Math.random() * 10);
 		}
 		return numero;
+	}
+	
+	public static String codeAut() {
+		String numero = "";
+		for (int i = 0; i < 6; i++) {
+			numero += (int) (Math.random() * 9);
+		}
+		return numero;
+	}
+	
+	public static Long getDate() {
+		return System.currentTimeMillis();
 	}
 	
 	
