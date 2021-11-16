@@ -6,6 +6,7 @@ public class BillDto {
 	
 	private Long bill_number;
 	private int bill_amount;
+	
 	public Long getBill_number() {
 		return bill_number;
 	}

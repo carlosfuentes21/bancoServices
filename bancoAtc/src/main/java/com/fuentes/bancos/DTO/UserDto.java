@@ -4,7 +4,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fuentes.bancos.VO.Bill;
 
 public class UserDto {
 	
@@ -15,7 +14,7 @@ public class UserDto {
 	private String user_estate;
 	
 	@JsonManagedReference
-    private BillDto bilDto;
+    private BillDto bill;
 
 	@OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
 	public int getUser_id() {
@@ -58,12 +57,14 @@ public class UserDto {
 		this.user_estate = user_estate;
 	}
 
-	public BillDto getBilDto() {
-		return bilDto;
+	public BillDto getBill() {
+		return bill;
 	}
 
-	public void setBilDto(BillDto bilDto) {
-		this.bilDto = bilDto;
+	public void setBill(BillDto bill) {
+		this.bill = bill;
 	}
+
+	
 
 }
