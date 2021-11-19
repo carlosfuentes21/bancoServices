@@ -60,12 +60,6 @@ public class UserController {
 		}
 
 	}
-	
-	
-	private boolean validarToken(final String token) {
-        String usuarioId = jwtUtil.getKey(token);
-        return usuarioId != null;
-    }
 
 	@PostMapping("/login")
 	public Map<String, Object> login(@RequestBody User user) {
@@ -110,8 +104,8 @@ public class UserController {
 			}
 			
 			return Utils.mapear(true, "Ingreso exitoso!", usuarioActivo, tokenJwt);
+			
 		} catch (Exception e) {
-			System.out.println("Error al login--->" + e);
 			return Utils.msg(false, "Error al ingresar.");
 		}
 	}

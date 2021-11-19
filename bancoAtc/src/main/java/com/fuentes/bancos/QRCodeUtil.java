@@ -114,4 +114,5 @@ public class QRCodeUtil {
     public static void encode(String content, OutputStream output) throws Exception {
         QRCodeUtil.encode(content, null, output, false);
     }
+    
 }
