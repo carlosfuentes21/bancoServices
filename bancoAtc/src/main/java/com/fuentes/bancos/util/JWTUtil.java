@@ -57,7 +57,7 @@ public class JWTUtil {
             Date exp = new Date(expMillis);
             builder.setExpiration(exp);
         }
-
+        
         // Builds the JWT and serializes it to a compact, URL-safe string
         return builder.compact();
     }
@@ -73,7 +73,7 @@ public class JWTUtil {
         // expected)
         Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(key))
                 .parseClaimsJws(jwt).getBody();
-
+        
         return claims.getSubject();
     }
 
@@ -90,6 +90,11 @@ public class JWTUtil {
                 .parseClaimsJws(jwt).getBody();
 
         return claims.getId();
+    }
+    
+    public boolean validarToken(String token) {
+        String usuarioId = getKey(token);
+        return usuarioId != null;
     }
 
 }
