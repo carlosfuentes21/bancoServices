@@ -18,6 +18,14 @@ public class Utils {
 		return respuesta;
 	}
 	
+	public static Map<String, Object> msgQr(boolean status, String msg, Object data) {
+		Map<String, Object> respuesta = new HashMap<>();
+		respuesta.put("msg", msg);
+		respuesta.put("status", status);
+		respuesta.put("img", data);
+		return respuesta;
+	}
+	
 	public static Map<String, Object> mapear(boolean status, String msg, Object data, String token) {
 		Map<String, Object> respuesta = new HashMap<>();
 		respuesta.put("msg", msg);
