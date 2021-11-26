@@ -41,7 +41,7 @@ public class QrCodeController {
         		//stream = response.getOutputStream();
                 // Usa herramientas para generar código QR
                 //QRCodeUtil.encode(numberBillDto.getNumberBill(), stream);
-        		String result = qrCodeService.crateQRCode("this is qrcode",200,200);
+        		String result = qrCodeService.crateQRCode(numberBillDto.getNumberBill());
         		return Utils.msgQr(true, "success", result);
         	}
         	return Utils.msg(false, "token invalido");

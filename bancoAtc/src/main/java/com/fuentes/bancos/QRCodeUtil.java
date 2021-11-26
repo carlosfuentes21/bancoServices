@@ -127,7 +127,7 @@ public class QRCodeUtil {
     }
     
     
-    public static String crateQRCode(String content, int width, int height) throws Exception {
+    public static String crateQRCode(String content) throws Exception {
 
         String resultImage = "";
        
@@ -141,7 +141,7 @@ public class QRCodeUtil {
 
             try {
                 QRCodeWriter writer = new QRCodeWriter();
-                BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, width, height, hints);
+                BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, WIDTH, HEIGHT, hints);
 
                 BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
                 ImageIO.write(bufferedImage, "png", os);
